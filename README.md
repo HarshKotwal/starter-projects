@@ -1,4 +1,4 @@
-# Mini Projects
+# Starter Projects
 
 A collection of small projects (currently frontend built while learning HTML, CSS, and JavaScript).
 
