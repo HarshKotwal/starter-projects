@@ -1,5 +1,6 @@
 const buttons = document.querySelectorAll("button");
-const screen = document.querySelector("#screen");
+const expression = document.querySelector("#expression");
+const currentDisplay = document.querySelector("#current");
 
 let currentInput = "0";
 let shouldReset = false;
@@ -24,46 +25,80 @@ buttons.forEach((button) => {
 });
 
 function clearAll() {
-  screen.textContent = "0";
   currentInput = "0";
   firstOperand = null;
   operator = null;
   shouldReset = false;
+  expression.textContent = "";
+  currentDisplay.textContent = "0";
+  currentDisplay.style.fontSize = "4rem";
 }
 
 function handleNumber(value) {
-  if (shouldReset || currentInput === "0") {
+  if (shouldReset) {
     currentInput = value;
     shouldReset = false;
   } else {
-    currentInput += value;
+    if (value === "00" && currentInput === "0") {
+      currentInput = "0";
+    } else if (value === "." && currentInput === "0") {
+      currentInput = "0.";
+    } else if (value === "." && currentInput.includes(".")) {
+      return;
+    } else if (currentInput === "0" && value !== ".") {
+      currentInput = value;
+    } else {
+      currentInput += value;
+    }
   }
-  screen.textContent = currentInput;
+
+  updateScreen();
+}
+
+function updateScreen() {
+  if (currentInput.length > 16) {
+    currentInput = currentInput.slice(0, 16);
+  }
+  currentDisplay.textContent = currentInput;
+
+  if (currentInput.length > 12) {
+    currentDisplay.style.fontSize = "2rem";
+  } else if (currentInput.length > 8) {
+    currentDisplay.style.fontSize = "2.5rem";
+  } else {
+    currentDisplay.style.fontSize = "4rem";
+  }
 }
 
 function handleOperator(op) {
-  if (operator !== null && !shouldReset) {
-    calculate();
+  if (firstOperand === null) {
+    firstOperand = currentInput;
+  } else if (!shouldReset) {
+    firstOperand = operate(firstOperand, operator, currentInput);
+    currentDisplay.textContent = firstOperand;
   }
-  firstOperand = currentInput;
   operator = op;
+  expression.textContent = firstOperand + " " + operator;
   shouldReset = true;
 }
 
 function calculate() {
   if (firstOperand === null || operator === null) return;
   let result = operate(firstOperand, operator, currentInput);
-  screen.textContent = result;
-  currentInput = result;
-  firstOperand = result;
+  expression.textContent =
+    firstOperand + " " + operator + " " + currentInput + "=";
+  currentDisplay.textContent = result;
+  currentInput = result.toString();
+  firstOperand = null;
   operator = null;
   shouldReset = true;
+  updateScreen();
 }
 
 function deleteLast() {
   if (shouldReset) return;
   currentInput = currentInput.slice(0, -1) || "0";
-  screen.textContent = currentInput;
+  updateScreen();
 }
 
 function operate(a, op, b) {

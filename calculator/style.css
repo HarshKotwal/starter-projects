@@ -23,10 +23,20 @@
   height: 25vh;
   background: #000;
   color: white;
-  font-size: 4rem;
   text-align: right;
-  padding: 5rem 20px 20px 20px;
+  padding: 2rem 20px;
   margin-bottom: 15px;
+  overflow: hidden;
+}
+
+#expression {
+  font-size: 2rem;
+  color: #aaa;
+}
+
+#current {
+  font-size: 4rem;
+  font-weight: 700;
 }
 
 .nums {
