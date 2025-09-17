@@ -30,7 +30,7 @@
 }
 
 #expression {
-  font-size: 2rem;
+  font-size: 1.5rem;
   color: #aaa;
 }
 
@@ -52,6 +52,7 @@
   border: none;
   border-radius: 10px;
   cursor: pointer;
+  font-weight: 600;
 }
 
 .nums button:hover {
@@ -82,4 +83,32 @@
   overflow-y: auto;
   font-size: 1rem;
   font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+}
+
+#mode {
+  height: 1.6rem;
+  width: 4rem;
+  background: #fff;
+  font-weight: 700;
+  font-family: cursive;
+  color: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 9999px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+#mode:hover {
+  transform: scale(1.2);
+}
+
+.main,
+#screen,
+.history {
+  transition: all 0.3s ease;
 }
