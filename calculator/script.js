@@ -1,11 +1,50 @@
 const buttons = document.querySelectorAll("button");
 const expression = document.querySelector("#expression");
 const currentDisplay = document.querySelector("#current");
+const historyList = document.getElementById("history-list");
 
 let currentInput = "0";
 let shouldReset = false;
 let firstOperand = null;
 let operator = null;
+
+function formatResult(num) {
+  if (num === "Error") return "Error";
+  const n = Number(num);
+  if (!isFinite(n)) return "Error";
+  if (Math.abs(n) >= 1e12 || (Math.abs(n) > 0 && Math.abs(n) < 1e-10)) {
+    return n.toExponential(6);
+  }
+  if (Number.isInteger(n)) {
+    return n.toString();
+  }
+  return parseFloat(n.toFixed(10)).toString();
+}
+
+function addToHistory(expressionStr, resultStr) {
+  if (!historyList) return;
+  const item = document.createElement("div");
+  item.className = "history-item";
+
+  const expNode = document.createElement("div");
+  expNode.className = "exp";
+  expNode.textContent = expressionStr + " =";
+
+  const resNode = document.createElement("div");
+  resNode.className = "res";
+  resNode.textContent = formatResult(resultStr);
+
+  if (mode.textContent === "Dark") {
+    expNode.style.color = "#555";
+    resNode.style.color = "#000";
+  } else {
+    expNode.style.color = "#aaa";
+    resNode.style.color = "#fff";
+  }
+  item.appendChild(expNode);
+  item.appendChild(resNode);
+  historyList.prepend(item);
+}
 
 buttons.forEach((button) => {
   button.addEventListener("click", () => {
@@ -74,7 +113,13 @@ function handleOperator(op) {
   if (firstOperand === null) {
     firstOperand = currentInput;
   } else if (!shouldReset) {
-    firstOperand = operate(firstOperand, operator, currentInput);
+    const rawResult = operate(firstOperand, operator, currentInput);
+    const formattedResult = formatResult(rawResult);
+    addToHistory(
+      firstOperand + " " + operator + " " + currentInput,
+      formattedResult
+    );
+    firstOperand = formattedResult;
     currentDisplay.textContent = firstOperand;
   }
   operator = op;
@@ -84,11 +129,14 @@ function handleOperator(op) {
 
 function calculate() {
   if (firstOperand === null || operator === null) return;
-  let result = operate(firstOperand, operator, currentInput);
-  expression.textContent =
-    firstOperand + " " + operator + " " + currentInput + "=";
-  currentDisplay.textContent = result;
-  currentInput = result.toString();
+  const rawResult = operate(firstOperand, operator, currentInput);
+  const formattedResult = formatResult(rawResult);
+  const exprStr = firstOperand + " " + operator + " " + currentInput;
+  expression.textContent = exprStr + " =";
+  currentDisplay.textContent = formattedResult;
+  addToHistory(exprStr, formattedResult);
+
+  currentInput = formattedResult.toString();
   firstOperand = null;
   operator = null;
   shouldReset = true;
