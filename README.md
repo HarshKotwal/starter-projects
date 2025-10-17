@@ -9,6 +9,7 @@ A collection of small projects (currently frontend built while learning HTML, CS
 - **Tic Tac Toe Game** – Classic game built with JS DOM logic
 - **Rock Paper Scissor** – Interactive game with score tracking
 - **Currency Converter** – Real-time currency rate calculator using APIs
+- **Calculator** - A mathematical calculator with all the basic operations and calculator rules
 
 
 ---
